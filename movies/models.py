@@ -8,8 +8,14 @@ class Movie(models.Model):
     price = models.IntegerField()
     description = models.TextField()
     image = models.ImageField(upload_to='movie_images/')
+    hidden_by = models.ManyToManyField(User, related_name='hidden_movies', blank=True)
+
     def __str__(self):
         return str(self.id) + " - " + self.name
+
+    def is_hidden_by_user(self, user):
+        return self.hidden_by.filter(id=user.id).exists()
+
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=255)
