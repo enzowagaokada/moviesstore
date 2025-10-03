@@ -26,3 +26,19 @@ class Review(models.Model):
         on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id) + ' - ' + self.movie.name
+    
+class MoviePetition(models.Model):
+    movie_title = models.CharField(max_length=200)
+    description = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='petitions')
+    created_at = models.DateTimeField(auto_now_add=True)
+    votes = models.ManyToManyField(User, related_name='voted_petitions', blank=True)
+    
+    def total_votes(self):
+        return self.votes.count()
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.movie_title

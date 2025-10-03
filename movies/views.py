@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Movie, Review
+from .models import Movie, Review, MoviePetition
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
@@ -79,3 +79,33 @@ def hidden_movies(request):
     template_data['title'] = 'Hidden Movies'
     template_data['movies'] = Movie.objects.filter(hidden_by=request.user)
     return render(request, 'movies/hidden.html', {'template_data': template_data})
+
+@login_required
+def petition_list(request):
+    petitions = MoviePetition.objects.all()
+    return render(request, 'movies/petition_list.html', {'petitions': petitions})
+
+@login_required
+def create_petition(request):
+    if request.method == 'POST':
+        movie_title = request.POST.get('movie_title')
+        description = request.POST.get('description')
+        petition = MoviePetition.objects.create(
+            movie_title=movie_title,
+            description=description,
+            created_by=request.user
+        )
+        petition.votes.add(request.user)
+        return redirect('movies.petition_list')
+    return render(request, 'movies/create_petition.html')
+
+@login_required
+def vote_petition(request, petition_id):
+    petition = get_object_or_404(MoviePetition, id=petition_id)
+
+    if request.user in petition.votes.all():
+        petition.votes.remove(request.user)
+    else:
+        petition.votes.add(request.user)
+
+    return redirect('movies.petition_list')

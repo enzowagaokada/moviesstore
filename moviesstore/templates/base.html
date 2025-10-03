@@ -37,6 +37,8 @@
               href="{% url 'movies.index' %}">Movies</a>
             <a class="nav-link"
               href="{% url 'cart.index' %}">Cart</a>
+            <a class="nav-link"
+              href="{% url 'movies.petition_list' %}">Petitions</a>
             <div class=
               "vr bg-white mx-2 d-none d-lg-block"></div>
             {% if user.is_authenticated %}
@@ -67,7 +69,7 @@
     <!-- Footer -->
     <section class="p-3 ms-footer d-none d-md-block">
       <div class="container">
-        <div class="row mt-3 text-white">
+        <div class="row mt-3 text-black">
           <div class="col-md-6 col-lg-6 col-xl-6mx-auto mb-4">
             <b>MOVIES STORE</b>
             <hr />
